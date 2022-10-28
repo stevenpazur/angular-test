@@ -1,0 +1,41 @@
+table {
+  box-shadow: none;
+}
+
+.hovered {
+  background-color: lightblue;
+}
+
+.highlighted {
+  background-color: rgb(168, 226, 245);
+}
+
+.container {
+  margin: 5%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.search-patient {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  height: 100%;
+  padding: 20px;
+  border: 1px solid black;
+  margin-right: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.container .mat-radio-button {
+  margin: 0 12px;
+}
+
+.save-btn {
+  float: right;
+  margin-right: 50px;
+  margin-top: 50px;
+}

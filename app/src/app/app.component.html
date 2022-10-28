@@ -1,0 +1,167 @@
+<section class="container">
+  <article class="search-patient">
+    <div>
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Search Name</mat-label>
+        <input
+          matInput
+          placeholder="Search"
+          [(ngModel)]="nameSearch"
+          (keyup)="search()"
+        />
+      </mat-form-field>
+      <div style="display: flex; padding-bottom: 10px">
+        <input
+          type="checkbox"
+          [(ngModel)]="caseSensitiveSearch"
+          style="margin: 0; padding: 0; margin-right: 5px"
+        />
+        <p style="margin: 0; padding: 0">Case Sensitive Search</p>
+      </div>
+      <p>Matched Patients</p>
+      <table
+        mat-table
+        [dataSource]="resultArray"
+        class="mat-elevation-z8 full-width"
+      >
+        <ng-container matColumnDef="fname">
+          <th mat-header-cell *matHeaderCellDef>First Name</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.Name.split(" ")[0] }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lname">
+          <th mat-header-cell *matHeaderCellDef>Last Name</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.Name.substring(element.Name.indexOf(" ") + 1) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mrn">
+          <th mat-header-cell *matHeaderCellDef>MRN No.</th>
+          <td mat-cell *matCellDef="let element">{{ element.MRN }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          (click)="selectRow(row)"
+          [ngClass]="{
+            hovered: row.hovered,
+            highlighted: selection.isSelected(row)
+          }"
+          (mouseover)="row.hovered = true"
+          (mouseout)="row.hovered = false"
+        ></tr>
+      </table>
+    </div>
+  </article>
+  <article class="patient-info" *ngIf="selection.selected.length > 0">
+    <mat-form-field class="full-width">
+      <mat-label>MRN #</mat-label>
+      <input matInput readonly [(ngModel)]="mrnResult" />
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="nameResult" />
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>DOB</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="dobResult" />
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Scheduled Visit</mat-label>
+      <input
+        matInput
+        type="datetime-local"
+        [(ngModel)]="scheduledDateTimeResult"
+      />
+    </mat-form-field>
+    <label>Gender&nbsp;&nbsp;&nbsp;</label>
+    <mat-radio-group class="full-width" [(ngModel)]="genderResult">
+      <mat-radio-button value="Male">Male</mat-radio-button>
+      <mat-radio-button value="Female">Female</mat-radio-button>
+    </mat-radio-group>
+    <mat-form-field class="full-width">
+      <mat-label>Weight</mat-label>
+      <input matInput readonly [(ngModel)]="weightResult" />
+    </mat-form-field>
+
+    <table
+      mat-table
+      [dataSource]="allergyResults"
+      class="mat-elevation-z8 full-width"
+    >
+      <ng-container matColumnDef="allergy">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.Name }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="No Problem">
+        <th mat-header-cell *matHeaderCellDef>No Problem</th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="element.NoProblem">
+            <input
+              type="checkbox"
+              checked
+              (click)="updateAllergyResults(0, element)"
+            />
+          </div>
+          <div *ngIf="!element.NoProblem">
+            <input type="checkbox" (click)="updateAllergyResults(0, element)" />
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Medical Problem">
+        <th mat-header-cell *matHeaderCellDef>Medical Problem</th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="element.MedicalProblem">
+            <input
+              type="checkbox"
+              checked
+              (click)="updateAllergyResults(1, element)"
+            />
+          </div>
+          <div *ngIf="!element.MedicalProblem">
+            <input type="checkbox" (click)="updateAllergyResults(1, element)" />
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Surgery">
+        <th mat-header-cell *matHeaderCellDef>Surgery</th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="element.Surgery">
+            <input
+              type="checkbox"
+              checked
+              (click)="updateAllergyResults(2, element)"
+            />
+          </div>
+          <div *ngIf="!element.Surgery">
+            <input type="checkbox" (click)="updateAllergyResults(2, element)" />
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="allergyDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: allergyDisplayedColumns"></tr>
+    </table>
+    <div *ngIf="submit">
+      <h4 style="color: green">
+        Data successfully saved to src/app/sampleData.json.
+      </h4>
+    </div>
+    <button mat-raised-button class="save-btn" (click)="saveData()">
+      Save
+    </button>
+  </article>
+</section>
